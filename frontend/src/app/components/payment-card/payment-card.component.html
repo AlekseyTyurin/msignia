@@ -1,0 +1,129 @@
+<div class="credit-card-container">
+  <mat-card class="card">
+    <mat-card-header>
+      <div class="cc-box__logo">
+        <p>{{getCardType(ccNumber.value) | uppercase}}</p>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <form class="card-form" [formGroup]="ccForm" #cardForm="ngForm" autocomplete="off">
+        <mat-form-field class="full-width">
+          <mat-label>Input card number</mat-label>
+          <input matInput #ccNumber aria-label="Card number" name=""
+                 type="text" title="Card number" maxlength="19" formControlName="cardNumber"
+                 >
+        </mat-form-field>
+
+        <div class="cc-form__error"
+             *ngIf="validateCCNum && ccForm.get('cardNumber').touched && ccForm.get('cardNumber').hasError('required')">
+          {{ccNumMissingTxt}}
+        </div>
+        <div class="cc-form__error"
+             *ngIf="validateCCNum && ccForm.get('cardNumber').touched && ccForm.get('cardNumber').hasError('minlength')">
+          {{ccNumTooShortTxt}}
+        </div>
+        <div class="cc-form__error"
+             *ngIf="validateCCNum && ccForm.get('cardNumber').touched && ccForm.get('cardNumber').hasError('maxlength')">
+          {{ccNumTooLongTxt}}
+        </div>
+        <div class="cc-form__error"
+             *ngIf="validateCCNum && ccForm.get('cardNumber').touched && ccForm.get('cardNumber').hasError('numbersOnly')">
+          {{ccNumContainsLettersTxt}}
+        </div>
+        <div class="cc-form__error"
+             *ngIf="validateCCNum && ccForm.get('cardNumber').touched && ccForm.get('cardNumber').hasError('checksum')">
+          {{ccNumChecksumInvalidTxt}}
+        </div>
+
+        <mat-form-field class="full-width">
+          <mat-label>Cardholder full name</mat-label>
+          <input matInput id="cc-holder-name" aria-label="Card holder name" type="text" name="cc-holder-name"
+                 title="Card holder name" maxlength="22" formControlName="cardHolder">
+        </mat-form-field>
+        <div class="cc-form__error"
+             *ngIf="validateCardHolder && ccForm.get('cardHolder').touched &&
+           ccForm.get('cardHolder').hasError('required')">
+          {{cardHolderMissingTxt}}
+        </div>
+        <div class="cc-form__error"
+             *ngIf="validateCardHolder && ccForm.get('cardHolder').touched &&
+           ccForm.get('cardHolder').hasError('maxlength')">
+          {{cardHolderTooLongTxt}}
+        </div>
+
+        <table class="full-width" cellspacing="0">
+          <tr><h4>Expiration</h4></tr>
+          <tr>
+            <td>
+              <mat-form-field class="full-width">
+                <mat-label>Month</mat-label>
+                <mat-select aria-label="Expiration month"
+                            formControlName="expirationMonth">
+                  <mat-option *ngFor="let month of months" [value]="month"
+                              >{{month}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td>/</td>
+            <td>
+              <mat-form-field class="full-width">
+                <mat-label>Year</mat-label>
+                <mat-select aria-label="Expiration year"
+                            formControlName="expirationYear">
+                  <mat-option *ngFor="let year of years" [value]="year"
+                              >{{year}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field class="full-width">
+                <mat-label>CVV</mat-label>
+                <input matInput type="password" minlength="3" maxlength="4" formControlName="ccv"
+                       >
+              </mat-form-field>
+            </td>
+            <div class="cc-form__error"
+                 *ngIf="validateExpirationMonth && ccForm.get('expirationMonth').touched &&
+             ccForm.get('expirationMonth').hasError('required')">
+              {{expirationMonthMissingTxt}}
+            </div>
+            <div class="cc-form__error"
+                 *ngIf="validateExpirationMonth && ccForm.get('expirationYear').touched &&
+             ccForm.get('expirationYear').hasError('required')">
+              {{expirationYearMissingTxt}}
+            </div>
+            <div class="cc-form__error" *ngIf="validateCardExpiration && ccForm.get('expirationMonth').touched &&
+    ccForm.get('expirationYear').touched && ccForm.hasError('expiration')">
+              {{cardExpiredTxt}}
+            </div>
+            <div class="cc-form__error"
+                 *ngIf="validateCCV && ccForm.get('ccv').touched && ccForm.get('ccv').hasError('required')">
+              {{ccvMissingTxt}}
+            </div>
+            <div class="cc-form__error"
+                 *ngIf="validateCCV && ccForm.get('ccv').touched && ccForm.get('ccv').hasError('minlength')">
+              {{ccvNumTooShortTxt}}
+            </div>
+            <div class="cc-form__error"
+                 *ngIf="validateCCV && ccForm.get('ccv').touched && ccForm.get('ccv').hasError('maxlength')">
+              {{ccvNumTooLongTxt}}
+            </div>
+            <div class="cc-form__error"
+                 *ngIf="validateCCV && ccForm.get('ccv').touched && ccForm.get('ccv').hasError('numbersOnly')">
+              {{ccvContainsLettersTxt}}
+            </div>
+          </tr>
+        </table>
+      </form>
+
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button mat-raised-button color="warn" [routerLink]="['/']">CANCEL</button>
+      <button mat-button mat-raised-button color="primary" type="submit" aria-label="submit"
+              [disabled]="" (click)="emitSavedCard()">BUY
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
